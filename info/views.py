@@ -1,8 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, render_to_response
 from info.models import News, ContactForm
 from django.utils import timezone
 from django.views.generic import TemplateView, ListView
-from django.shortcuts import render, get_object_or_404, render_to_response
 from django.http import HttpResponse
 from django.core.mail import send_mail, BadHeaderError
 from django.db.models import Q
@@ -19,12 +18,12 @@ def contactView(request):
             message = form.cleaned_data['message']
             copy = form.cleaned_data['copy']
 
-            recipients = ['ВАШ_EMAIL_ДЛЯ_ПОЛУЧЕНИЯ_СООБЩЕНИЯ']
+            recipients = ['ld92049@gmail.com']
             # Если пользователь захотел получить копию себе, добавляем его в список получателей
             if copy:
                 recipients.append(sender)
             try:
-                send_mail(subject, message, 'ВАШ_EMAIL_ДЛЯ_ОТПРАВКИ_СООБЩЕНИЯ', recipients)
+                send_mail(subject, message, sender, recipients)
             except BadHeaderError:  # Защита от уязвимости
                 return HttpResponse('Invalid header found')
             # Переходим на другую страницу, если сообщение отправлено
